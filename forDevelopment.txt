@@ -1,0 +1,23 @@
+Aerobics:
+    We will begin with a few excercises, to log a baseline for your fitness!
+    We will start with marching in place! Stand in place, and raise one leg, then the other, as though you are marching!
+    Try to continue as long as feels comfortable for you. Remember, don't overwork yourself!
+    Press the button when you are ready to begin, and press again when you are done!
+    3
+    2
+    1
+    [timer begins with button to end timer]
+Strength:
+    We will begin with a few excercises, to log a baseline for your fitness!
+    We will start with squats! Raise the dumbells at head height, and squat down slowly.
+    Try to squat as many times with as much weight as feels comfortable for you. Remember, don't overwork yourself!
+    When you are done, input how many squats you did, and how much weight you used! [input fields appear]
+Balance:
+    We will begin with a few excercises, to log a baseline for your fitness!
+    We will start with a one leg stand! Stand in place, and raise one leg behind you. See how straight you can stand!
+    Try to continue as long as feels comfortable for you. Remember, be careful not to fall and hurt yourself!
+    Press the button when you are ready to begin, and press again when you are done!
+    3
+    2
+    1
+    [timer begins, with button to end timer]

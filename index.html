@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fitness Journey</title>
+  <style>
+    body {margin:0; background:#f2f2f2; color:#1f2937; font-family:Segoe UI,Arial,sans-serif;}
+    #app {padding:24px;}
+    .hidden {display:none;}
+    button {padding:10px 14px; margin:4px 4px 8px 0; border:0; border-radius:8px; color:#fff; cursor:pointer; font-size:16px; font-weight:600;}
+    .bt-primary{background:#0b69ff;} .bt-aerobics{background:#ff7f50;} .bt-strength{background:#1d9c3f;} .bt-balance{background:#f3a91b;} .bt-continue{background:#16a34a;} .bt-back{background:#475569;}
+    #section {background:#fff; border:1px solid #d1d5db; border-radius:12px; padding:18px; max-width:620px; box-shadow:0 3px 12px rgba(0,0,0,0.08);}
+    #cube {position:fixed; bottom:16px; right:16px; max-width:220px; max-height:180px;}
+    #timer {margin-top:12px; color:#111; font-weight:700;}
+    #goal-list {margin-left:20px;}
+    input[type="number"]{margin-right:8px; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;}
+  </style>
+</head>
+<body>
+  <img id="cube" src="test_cube.png" alt="test_cube" onerror="this.style.display='none'" />
+  <div id="app">
+    <div id="main-screen">
+      <button id="add-goal" class="bt-primary">Add fitness goal</button>
+      <div id="goal-options" class="hidden">
+        <button data-goal="Aerobics" class="bt-aerobics">Aerobics</button>
+        <button data-goal="Strength" class="bt-strength">Strength</button>
+        <button data-goal="Balance" class="bt-balance">Balance</button>
+      </div>
+      <section id="goal-list-section" class="section">
+        <h3>Goals</h3>
+        <ul id="goal-list"></ul>
+      </section>
+    </div>
+
+    <div id="exercise-screen" class="hidden">
+      <section id="section">
+        <p id="exercise-text"></p>
+        <div id="timer" class="hidden">Timer: <span id="timer-value">0:00</span> <button id="timer-btn" class="bt-continue">Start</button></div>
+        <div id="beer"> <!-- placeholder for potential future audio or bells --> </div>
+        <div id="input-fields" class="hidden">
+          <input id="strength-count" type="number" min="0" placeholder="Squats" />
+          <input id="strength-weight" type="number" min="0" placeholder="Weight lbs" />
+        </div>
+        <button id="continue-btn" class="bt-continue">Continue</button>
+        <button id="back-btn" class="bt-back">Back to main menu</button>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const rawPlan = {
+      Aerobics: [
+        'We will begin with a few excercises, to log a baseline for your fitness!',
+        'We will start with marching in place! Stand in place, and raise one leg, then the other, as though you are marching!',
+        'Try to continue as long as feels comfortable for you. Remember, don\'t overwork yourself!',
+        'Press the button when you are ready to begin, and press again when you are done!',
+        '3', '2', '1', '[timer begins with button to end timer]'
+      ],
+      Strength: [
+        'We will begin with a few excercises, to log a baseline for your fitness!',
+        'We will start with squats! Raise the dumbbells at head height, and squat down slowly.',
+        'Try to squat as many times with as much weight as feels comfortable for you. Remember, don\'t overwork yourself!',
+        'When you are done, input how many squats you did, and how much weight you used! [input fields appear]'
+      ],
+      Balance: [
+        'We will begin with a few excercises, to log a baseline for your fitness!',
+        'We will start with a one leg stand! Stand in place, and raise one leg behind you. See how straight you can stand!',
+        'Try to continue as long as feels comfortable for you. Remember, be careful not to fall and hurt yourself!',
+        'Press the button when you are ready to begin, and press again when you are done!',
+        '3', '2', '1', '[timer begins, with button to end timer]'
+      ]
+    };
+
+    const addGoalBtn = document.getElementById('add-goal');
+    const goalOptions = document.getElementById('goal-options');
+    const goalList = document.getElementById('goal-list');
+    const mainScreen = document.getElementById('main-screen');
+    const exerciseScreen = document.getElementById('exercise-screen');
+    const exerciseText = document.getElementById('exercise-text');
+    const timerWrapper = document.getElementById('timer');
+    const timerValue = document.getElementById('timer-value');
+    const timerBtn = document.getElementById('timer-btn');
+    const inputFields = document.getElementById('input-fields');
+    const strengthCount = document.getElementById('strength-count');
+    const strengthWeight = document.getElementById('strength-weight');
+    const continueBtn = document.getElementById('continue-btn');
+    const backBtn = document.getElementById('back-btn');
+
+    let currentPlan = null;
+    let currentIndex = 0;
+    let timerHandle = null;
+    let elapsed = 0;
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return m + ':' + (s < 10 ? '0' + s : s);
+    }
+
+    function resetTimer() {
+      elapsed = 0;
+      timerValue.textContent = formatTime(elapsed);
+      clearInterval(timerHandle);
+      timerHandle = null;
+      timerBtn.textContent = 'Start';
+    }
+
+    function showMain() {
+      mainScreen.classList.remove('hidden');
+      exerciseScreen.classList.add('hidden');
+      goalOptions.classList.add('hidden');
+      addGoalBtn.style.display = 'inline-block';
+      timerWrapper.classList.add('hidden');
+      inputFields.classList.add('hidden');
+      resetTimer();
+    }
+
+    function renderLine() {
+      if (!currentPlan || currentIndex >= currentPlan.length) {
+        showMain();
+        return;
+      }
+      const line = currentPlan[currentIndex];
+      let display = line;
+
+      timerWrapper.classList.add('hidden');
+      timerBtn.style.display = 'inline-block';
+      inputFields.classList.add('hidden');
+
+      if (line.includes('[timer begins')) {
+        timerWrapper.classList.remove('hidden');
+        timerBtn.style.display = 'inline-block';
+        timerBtn.textContent = timerHandle ? 'Stop' : 'Start';
+        display = 'Press Start when ready, then press again when you finish the timer.';
+      } else if (line.includes('[input fields appear]')) {
+        inputFields.classList.remove('hidden');
+        timerWrapper.classList.add('hidden');
+        display = 'Enter your final reps and weight and press Continue.';
+      }
+
+      if (line.startsWith('[')) display = 'Tap Continue to move to the next step.';
+      exerciseText.textContent = display;
+    }
+
+    addGoalBtn.onclick = () => {
+      goalOptions.classList.remove('hidden');
+      addGoalBtn.style.display = 'none';
+    };
+
+    goalOptions.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const goal = btn.dataset.goal;
+        const li = document.createElement('li');
+        li.textContent = goal;
+        goalList.appendChild(li);
+        currentPlan = rawPlan[goal];
+        currentIndex = 0;
+        mainScreen.classList.add('hidden');
+        exerciseScreen.classList.remove('hidden');
+        resetTimer();
+        renderLine();
+      });
+    });
+
+    continueBtn.onclick = () => {
+      if (currentPlan[currentIndex].includes('[input fields appear]')) {
+        if (!strengthCount.value || !strengthWeight.value) {
+          alert('Please enter your squats and weight before continuing.');
+          return;
+        }
+      }
+      if (currentPlan[currentIndex].includes('[timer begins')) {
+        if (timerHandle) {
+          stopTimer();
+          currentIndex++;
+          renderLine();
+          return;
+        }
+        startTimer();
+        return;
+      }
+      currentIndex++;
+      renderLine();
+    };
+
+    function startTimer() {
+      timerWrapper.classList.remove('hidden');
+      timerBtn.textContent = 'Stop';
+      timerHandle = setInterval(() => {
+        elapsed++;
+        timerValue.textContent = formatTime(elapsed);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerHandle);
+      timerHandle = null;
+      timerBtn.textContent = 'Start';
+    }
+
+    backBtn.onclick = showMain;
+
+    showMain();
+  </script>
+</body>
+</html>
