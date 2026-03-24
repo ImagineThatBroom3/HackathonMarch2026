@@ -5,20 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fitness Journey</title>
   <style>
-    body {margin:0; background:#f2f2f2; color:#1f2937; font-family:Segoe UI,Arial,sans-serif;}
-    #app {padding:24px;}
+    html, body {margin:0; height:100%; overflow:hidden;}
+    body {background:#ffffff; color:#1f2937; font-family:Segoe UI,Arial,sans-serif; font-size:20.8px;}
+    #app {padding:31px; display:flex; flex-direction:column; align-items:center; background:#faf8f5; border-left:2px solid #d6cdb8; border-right:2px solid #d6cdb8; margin:0 72px; height:100vh; box-sizing:border-box; overflow:hidden;}
     .hidden {display:none;}
-    button {padding:10px 14px; margin:4px 4px 8px 0; border:0; border-radius:8px; color:#fff; cursor:pointer; font-size:16px; font-weight:600;}
-    .bt-primary{background:#0b69ff;} .bt-aerobics{background:#ff7f50;} .bt-strength{background:#1d9c3f;} .bt-balance{background:#f3a91b;} .bt-continue{background:#16a34a;} .bt-back{background:#475569;}
-    #section {background:#fff; border:1px solid #d1d5db; border-radius:12px; padding:18px; max-width:620px; box-shadow:0 3px 12px rgba(0,0,0,0.08);}
+    button {padding:13px 18px; margin:5px 5px 10px 5px; border:0; border-radius:10px; color:#1a1a1a; cursor:pointer; font-size:20.8px; font-weight:600;}
+    .bt-primary{background:#5b9fff;} .bt-aerobics{background:#ff7f50;} .bt-strength{background:#3dcc6a;} .bt-balance{background:#f5b731;} .bt-continue{background:#3dcc6a;} .bt-back{background:#475569; color:#fff;} .bt-finish{background:#3dcc6a;}
+    #section {background:#fff; border:1px solid #d1d5db; border-radius:14px; padding:23px; max-width:806px; width:100%; box-shadow:0 3px 12px rgba(0,0,0,0.08); margin:0 auto; text-align:center;}
     #cube {position:fixed; bottom:16px; right:16px; max-width:220px; max-height:180px;}
-    #timer {margin-top:12px; color:#111; font-weight:700;}
-    #goal-list {margin-left:20px;}
-    input[type="number"]{margin-right:8px; padding:6px 8px; border:1px solid #cbd5e1; border-radius:6px;}
+    #timer {margin-top:16px; color:#111; font-weight:700; font-size:20.8px;}
+    #main-screen, #result-screen, #exercise-screen {text-align:center; width:100%;}
+    #goal-list-section h3 {text-align:center;}
+    #goal-list {margin:0; padding:0; text-align:center; list-style:none;}
+    #goal-list li {display:block; margin:5px auto; position:relative;}
+    .goal-tooltip {display:none; position:absolute; left:50%; transform:translateX(-50%); top:100%; margin-top:6px; background:#fff; border:1px solid #cbd5e1; border-radius:10px; padding:12px 18px; box-shadow:0 4px 16px rgba(0,0,0,0.13); z-index:50; white-space:nowrap; font-size:17px; font-weight:400; color:#1f2937; pointer-events:none;}
+    #goal-list li:hover .goal-tooltip, .goal-tooltip.pinned {display:block;}
+    .goal-tooltip.pinned {pointer-events:auto;}
+    #input-fields, #input-fields-press {text-align:center;}
+    input[type="number"]{margin:0 5px; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; display:inline-block; width:156px; font-size:20.8px;}
+    .checkbox-group {margin:16px 0; text-align:center;}
+    .checkbox-group label {display:block; margin:8px auto; padding:10px 21px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer; max-width:364px; font-size:19.5px; transition: background 0.15s, border-color 0.15s;}
+    .checkbox-group label:hover {background:#e0e7ff; border-color:#6366f1;}
+    .checkbox-group input[type="radio"] {margin-right:10px; accent-color:#0050d0;}
+    .checkbox-group label.selected {background:#dbeafe; border-color:#0050d0; font-weight:600;}
+    #sign-in-area {position:fixed; right:25%; top:65%; transform:translate(50%, -50%); display:flex; flex-direction:column; align-items:center; z-index:100;}
+    #s4-logo {max-width:246px; margin-bottom:8px;}
+    #s4-link {color:#0050d0; font-size:28.7px; font-weight:600; text-decoration:none; margin-bottom:10px;}
+    #s4-link:hover {text-decoration:underline;}
+    #sign-in-btn {padding:16px 26px; border:0; border-radius:13px; background:#5b9fff; color:#1a1a1a; font-size:20.8px; font-weight:600; cursor:pointer; transition: background 0.4s;}
+    #sign-in-btn.signed-in {background:#3dcc6a; cursor:default;}
+    #sign-in-btn.loading {opacity:0.7; cursor:wait;}
+    @keyframes signin-pulse {0%{opacity:0.7}50%{opacity:0.4}100%{opacity:0.7}}
+    #sign-in-btn.loading {animation: signin-pulse 0.8s ease-in-out infinite;}
   </style>
 </head>
 <body>
   <img id="cube" src="test_cube.png" alt="test_cube" onerror="this.style.display='none'" />
+  <div id="sign-in-area">
+    <a href="http://www.supersimplestorageservice.com/" target="_blank" rel="noopener"><img id="s4-logo" src="S4 Logo.png" alt="S4 Logo" onerror="this.style.display='none'" style="cursor:pointer;" /></a>
+    <a id="s4-link" href="http://www.supersimplestorageservice.com/" target="_blank" rel="noopener">powered by S4</a>
+    <button id="sign-in-btn">Sign in?</button>
+  </div>
   <div id="app">
     <div id="main-screen">
       <button id="add-goal" class="bt-primary">Add fitness goal</button>
@@ -33,6 +60,14 @@
       </section>
     </div>
 
+    <div id="result-screen" class="hidden">
+      <section id="section">
+        <h3>Goal Result</h3>
+        <p id="result-text">Select a goal to view results.</p>
+        <button id="result-back-btn" class="bt-back">Back to main menu</button>
+      </section>
+    </div>
+
     <div id="exercise-screen" class="hidden">
       <section id="section">
         <p id="exercise-text"></p>
@@ -42,7 +77,15 @@
           <input id="strength-count" type="number" min="0" placeholder="Squats" />
           <input id="strength-weight" type="number" min="0" placeholder="Weight lbs" />
         </div>
+        <div id="input-fields-press" class="hidden">
+          <input id="press-count" type="number" min="0" placeholder="Presses" />
+          <input id="press-weight" type="number" min="0" placeholder="Weight lbs" />
+        </div>
+        <div id="checkbox-fields" class="hidden">
+          <div class="checkbox-group" id="walk-checkboxes"></div>
+        </div>
         <button id="continue-btn" class="bt-continue">Continue</button>
+        <button id="finish-btn" class="bt-finish hidden">Finish</button>
         <button id="back-btn" class="bt-back">Back to main menu</button>
       </section>
     </div>
@@ -55,22 +98,43 @@
         'We will start with marching in place! Stand in place, and raise one leg, then the other, as though you are marching!',
         'Try to continue as long as feels comfortable for you. Remember, don\'t overwork yourself!',
         'Press the button when you are ready to begin, and press again when you are done!',
-        '3', '2', '1', '[timer begins with button to end timer]'
+        '3', '2', '1', '[timer begins with button to end timer]',
+        'Now, how much do you walk for fun? 10 minutes? 30 minutes? 1 hour?!',
+        'Check the box that describes your liesure walks. [checkboxes appear]',
+        'Congratulations! Baseline recorded! [finish]'
       ],
       Strength: [
         'We will begin with a few excercises, to log a baseline for your fitness!',
-        'We will start with squats! Raise the dumbbells at head height, and squat down slowly.',
+        'We will start with squats! Raise the dumbells to head height, and squat down slowly.',
         'Try to squat as many times with as much weight as feels comfortable for you. Remember, don\'t overwork yourself!',
-        'When you are done, input how many squats you did, and how much weight you used! [input fields appear]'
+        'When you are done, input how many squats you did, and how much weight you used! [input fields appear]',
+        'Next, we will do a few dumbbell presses! Raise the dumbbells above your head, and then lower them to your shoulders.',
+        'Try to press as many times with as much weight as feels comfortable for you!',
+        'When you are done, input how many presses you did, and how much weight you used! [input fields press appear]',
+        'Congratulations! Baseline recorded! [finish]'
       ],
       Balance: [
         'We will begin with a few excercises, to log a baseline for your fitness!',
         'We will start with a one leg stand! Stand in place, and raise one leg behind you. See how straight you can stand!',
         'Try to continue as long as feels comfortable for you. Remember, be careful not to fall and hurt yourself!',
         'Press the button when you are ready to begin, and press again when you are done!',
-        '3', '2', '1', '[timer begins, with button to end timer]'
+        '3', '2', '1', '[timer begins, with button to end timer]',
+        'Next, we will try leaning against a wall. Stand with one arm against the wall, and raise one leg.',
+        'Try to continue as long as feels comfortable for you. Remember, be careful not to fall and hurt yourself!',
+        'Press the button when you are ready to begin, and press again when you are done!',
+        '3', '2', '1', '[timer begins with button to end timer]',
+        'Congratulations! Baseline recorded! [finish]'
       ]
     };
+
+    const walkOptions = [
+      '10 minutes',
+      '20 minutes',
+      '30 minutes',
+      '45 minutes',
+      '1+ hours',
+      "I can't take a long walk"
+    ];
 
     const addGoalBtn = document.getElementById('add-goal');
     const goalOptions = document.getElementById('goal-options');
@@ -82,15 +146,36 @@
     const timerValue = document.getElementById('timer-value');
     const timerBtn = document.getElementById('timer-btn');
     const inputFields = document.getElementById('input-fields');
+    const inputFieldsPress = document.getElementById('input-fields-press');
+    const checkboxFields = document.getElementById('checkbox-fields');
+    const walkCheckboxes = document.getElementById('walk-checkboxes');
     const strengthCount = document.getElementById('strength-count');
     const strengthWeight = document.getElementById('strength-weight');
+    const pressCount = document.getElementById('press-count');
+    const pressWeight = document.getElementById('press-weight');
     const continueBtn = document.getElementById('continue-btn');
+    const finishBtn = document.getElementById('finish-btn');
     const backBtn = document.getElementById('back-btn');
+    const resultScreen = document.getElementById('result-screen');
+    const resultText = document.getElementById('result-text');
+    const resultBackBtn = document.getElementById('result-back-btn');
 
+    let currentGoal = null;
+    let goalResults = {
+      Aerobics: null,
+      Strength: null,
+      Balance: null
+    };
     let currentPlan = null;
     let currentIndex = 0;
     let timerHandle = null;
+    let countdownHandle = null;
     let elapsed = 0;
+
+    // Track multiple timer results for Balance
+    let timerResults = [];
+    // Track selected walk option for Aerobics
+    let selectedWalk = null;
 
     function formatTime(seconds) {
       const m = Math.floor(seconds / 60);
@@ -104,16 +189,104 @@
       clearInterval(timerHandle);
       timerHandle = null;
       timerBtn.textContent = 'Start';
+      clearTimeout(countdownHandle);
+      countdownHandle = null;
+      continueBtn.disabled = false;
+      continueBtn.style.display = 'inline-block';
     }
 
     function showMain() {
       mainScreen.classList.remove('hidden');
       exerciseScreen.classList.add('hidden');
+      resultScreen.classList.add('hidden');
       goalOptions.classList.add('hidden');
       addGoalBtn.style.display = 'inline-block';
       timerWrapper.classList.add('hidden');
       inputFields.classList.add('hidden');
+      inputFieldsPress.classList.add('hidden');
+      checkboxFields.classList.add('hidden');
+      finishBtn.classList.add('hidden');
+      continueBtn.style.display = 'inline-block';
+      backBtn.style.display = 'inline-block';
       resetTimer();
+      timerResults = [];
+      selectedWalk = null;
+    }
+
+    function getResultText(goal) {
+      const result = goalResults[goal];
+      if (!result) return 'No baseline results recorded yet for ' + goal + '.';
+      if (result.type === 'aerobics') return 'Marching time: ' + result.marchTime.value + ' | Walking preference: ' + result.walkDuration;
+      if (result.type === 'strength') return 'Squats: ' + result.squatReps + ' reps, ' + result.squatWeight + ' lbs | Presses: ' + result.pressReps + ' reps, ' + result.pressWeight + ' lbs';
+      if (result.type === 'balance') return 'One-leg stand: ' + result.oneLegTime.value + ' | Wall lean: ' + result.wallLeanTime.value;
+      return '';
+    }
+
+    function unlockGoal(goal) {
+      const existing = Array.from(goalList.querySelectorAll('button')).find(b => b.textContent === goal);
+      if (existing) {
+        // Update tooltip text for existing goal
+        const li = existing.closest('li');
+        const tip = li.querySelector('.goal-tooltip');
+        if (tip) tip.textContent = getResultText(goal);
+        return;
+      }
+      const li = document.createElement('li');
+      const goalBtn = document.createElement('button');
+      goalBtn.type = 'button';
+      goalBtn.textContent = goal;
+      const goalColorMap = { Aerobics: 'bt-aerobics', Strength: 'bt-strength', Balance: 'bt-balance' };
+      goalBtn.className = goalColorMap[goal] || 'bt-primary';
+
+      const tooltip = document.createElement('div');
+      tooltip.className = 'goal-tooltip';
+      tooltip.textContent = getResultText(goal);
+
+      // Click to pin/unpin the tooltip
+      goalBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close any other pinned tooltips
+        document.querySelectorAll('.goal-tooltip.pinned').forEach(t => {
+          if (t !== tooltip) t.classList.remove('pinned');
+        });
+        tooltip.textContent = getResultText(goal);
+        tooltip.classList.toggle('pinned');
+      });
+
+      // Update tooltip text on hover
+      li.addEventListener('mouseenter', () => {
+        tooltip.textContent = getResultText(goal);
+      });
+
+      li.appendChild(goalBtn);
+      li.appendChild(tooltip);
+      goalList.appendChild(li);
+    }
+
+    // Close pinned tooltips when clicking elsewhere
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.goal-tooltip.pinned').forEach(t => t.classList.remove('pinned'));
+    });
+
+    function buildWalkCheckboxes() {
+      walkCheckboxes.innerHTML = '';
+      selectedWalk = null;
+      walkOptions.forEach(opt => {
+        const label = document.createElement('label');
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'walk-duration';
+        radio.value = opt;
+        radio.addEventListener('change', () => {
+          selectedWalk = opt;
+          // Highlight selected
+          walkCheckboxes.querySelectorAll('label').forEach(l => l.classList.remove('selected'));
+          label.classList.add('selected');
+        });
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(opt));
+        walkCheckboxes.appendChild(label);
+      });
     }
 
     function renderLine() {
@@ -124,23 +297,108 @@
       const line = currentPlan[currentIndex];
       let display = line;
 
+      clearTimeout(countdownHandle);
+      countdownHandle = null;
+      continueBtn.disabled = false;
+
       timerWrapper.classList.add('hidden');
       timerBtn.style.display = 'inline-block';
       inputFields.classList.add('hidden');
+      inputFieldsPress.classList.add('hidden');
+      checkboxFields.classList.add('hidden');
+      finishBtn.classList.add('hidden');
+      continueBtn.style.display = 'inline-block';
+      backBtn.style.display = 'inline-block';
 
-      if (line.includes('[timer begins')) {
-        timerWrapper.classList.remove('hidden');
-        timerBtn.style.display = 'inline-block';
-        timerBtn.textContent = timerHandle ? 'Stop' : 'Start';
-        display = 'Press Start when ready, then press again when you finish the timer.';
-      } else if (line.includes('[input fields appear]')) {
-        inputFields.classList.remove('hidden');
-        timerWrapper.classList.add('hidden');
-        display = 'Enter your final reps and weight and press Continue.';
+      // Countdown lines: 3, 2, 1
+      if (line === '3' || line === '2' || line === '1') {
+        exerciseText.textContent = line;
+        continueBtn.style.display = 'none';
+        backBtn.style.display = 'none';
+        countdownHandle = setTimeout(() => {
+          currentIndex++;
+          renderLine();
+        }, 1000);
+        return;
       }
 
-      if (line.startsWith('[')) display = 'Tap Continue to move to the next step.';
+      // Timer step
+      if (line.includes('[timer begins')) {
+        timerWrapper.classList.remove('hidden');
+        timerBtn.style.display = 'none';
+        continueBtn.style.display = 'inline-block';
+        continueBtn.textContent = 'Done';
+        display = 'Timer has started. Press Done when you are finished.';
+
+        if (!timerHandle) {
+          startTimer();
+        }
+      }
+      // Squat input fields
+      else if (line.includes('[input fields appear]')) {
+        inputFields.classList.remove('hidden');
+        timerWrapper.classList.add('hidden');
+        strengthCount.placeholder = 'Squats';
+        strengthWeight.placeholder = 'Weight lbs';
+        display = 'When you are done, input how many squats you did, and how much weight you used!';
+      }
+      // Press input fields
+      else if (line.includes('[input fields press appear]')) {
+        inputFieldsPress.classList.remove('hidden');
+        timerWrapper.classList.add('hidden');
+        display = 'When you are done, input how many presses you did, and how much weight you used!';
+      }
+      // Checkboxes for walking
+      else if (line.includes('[checkboxes appear]')) {
+        checkboxFields.classList.remove('hidden');
+        buildWalkCheckboxes();
+        display = 'Check the box that describes your liesure walks.';
+      }
+      // Finish step
+      else if (line.includes('[finish]')) {
+        display = 'Congratulations! Baseline recorded!';
+        continueBtn.style.display = 'none';
+        backBtn.style.display = 'none';
+        finishBtn.classList.remove('hidden');
+
+        // Save results before showing finish
+        saveResults();
+      }
+
+      // Reset continue button text if not on a timer step
+      if (!line.includes('[timer begins')) {
+        continueBtn.textContent = 'Continue';
+      }
+
       exerciseText.textContent = display;
+    }
+
+    function saveResults() {
+      if (!currentGoal) return;
+
+      if (currentGoal === 'Aerobics') {
+        goalResults.Aerobics = {
+          type: 'aerobics',
+          marchTime: timerResults.length > 0 ? timerResults[0] : { value: '0:00', seconds: 0 },
+          walkDuration: selectedWalk || 'Not selected'
+        };
+      } else if (currentGoal === 'Strength') {
+        goalResults.Strength = {
+          type: 'strength',
+          squatReps: strengthCount.value || '0',
+          squatWeight: strengthWeight.value || '0',
+          pressReps: pressCount.value || '0',
+          pressWeight: pressWeight.value || '0'
+        };
+      } else if (currentGoal === 'Balance') {
+        goalResults.Balance = {
+          type: 'balance',
+          oneLegTime: timerResults.length > 0 ? timerResults[0] : { value: '0:00', seconds: 0 },
+          wallLeanTime: timerResults.length > 1 ? timerResults[1] : { value: '0:00', seconds: 0 }
+        };
+      }
+
+      unlockGoal(currentGoal);
     }
 
     addGoalBtn.onclick = () => {
@@ -151,11 +409,15 @@
     goalOptions.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', () => {
         const goal = btn.dataset.goal;
-        const li = document.createElement('li');
-        li.textContent = goal;
-        goalList.appendChild(li);
         currentPlan = rawPlan[goal];
         currentIndex = 0;
+        currentGoal = goal;
+        timerResults = [];
+        selectedWalk = null;
+        strengthCount.value = '';
+        strengthWeight.value = '';
+        pressCount.value = '';
+        pressWeight.value = '';
         mainScreen.classList.add('hidden');
         exerciseScreen.classList.remove('hidden');
         resetTimer();
@@ -164,29 +426,62 @@
     });
 
     continueBtn.onclick = () => {
-      if (currentPlan[currentIndex].includes('[input fields appear]')) {
+      const line = currentPlan[currentIndex];
+
+      // Handle squat input validation
+      if (line.includes('[input fields appear]')) {
         if (!strengthCount.value || !strengthWeight.value) {
           alert('Please enter your squats and weight before continuing.');
           return;
         }
       }
-      if (currentPlan[currentIndex].includes('[timer begins')) {
+
+      // Handle press input validation
+      if (line.includes('[input fields press appear]')) {
+        if (!pressCount.value || !pressWeight.value) {
+          alert('Please enter your presses and weight before continuing.');
+          return;
+        }
+      }
+
+      // Handle checkbox validation
+      if (line.includes('[checkboxes appear]')) {
+        if (!selectedWalk) {
+          alert('Please select a walking duration before continuing.');
+          return;
+        }
+      }
+
+      // Handle timer stop
+      if (line.includes('[timer begins')) {
         if (timerHandle) {
           stopTimer();
+          timerResults.push({
+            value: formatTime(elapsed),
+            seconds: elapsed
+          });
+          // Reset timer for potential next timer step
+          elapsed = 0;
+          timerValue.textContent = formatTime(elapsed);
           currentIndex++;
           renderLine();
           return;
         }
-        startTimer();
         return;
       }
+
       currentIndex++;
       renderLine();
     };
 
+    finishBtn.onclick = () => {
+      showMain();
+    };
+
     function startTimer() {
       timerWrapper.classList.remove('hidden');
-      timerBtn.textContent = 'Stop';
+      timerBtn.style.display = 'none';
+      continueBtn.style.display = 'inline-block';
       timerHandle = setInterval(() => {
         elapsed++;
         timerValue.textContent = formatTime(elapsed);
@@ -196,10 +491,26 @@
     function stopTimer() {
       clearInterval(timerHandle);
       timerHandle = null;
-      timerBtn.textContent = 'Start';
+      timerBtn.style.display = 'none';
+      continueBtn.style.display = 'inline-block';
     }
 
     backBtn.onclick = showMain;
+    resultBackBtn.onclick = showMain;
+
+    // Sign-in button logic
+    const signInBtn = document.getElementById('sign-in-btn');
+    signInBtn.addEventListener('click', function() {
+      if (signInBtn.classList.contains('signed-in') || signInBtn.classList.contains('loading')) return;
+      signInBtn.classList.add('loading');
+      signInBtn.textContent = 'Signing in...';
+      const delay = 1000 + Math.random() * 1000; // 1–2 seconds
+      setTimeout(() => {
+        signInBtn.classList.remove('loading');
+        signInBtn.classList.add('signed-in');
+        signInBtn.textContent = 'Signed in!';
+      }, delay);
+    });
 
     showMain();
   </script>

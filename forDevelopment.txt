@@ -1,4 +1,4 @@
-Aerobics:
+Aerobics baseline:
     We will begin with a few excercises, to log a baseline for your fitness!
     We will start with marching in place! Stand in place, and raise one leg, then the other, as though you are marching!
     Try to continue as long as feels comfortable for you. Remember, don't overwork yourself!
@@ -7,12 +7,19 @@ Aerobics:
     2
     1
     [timer begins with button to end timer]
-Strength:
+    Now, how much do you walk for fun? 10 minutes? 30 minutes? 1 hour?!
+    Check the box that describes your liesure walks. [Check boxes appear. They read "10 minutes", "20 minutes", "30 minutes", "45 minutes", "1+ hours", and "I can't take a long walk". The value recorded matches the box checked.]
+    Congratulations! Baseline recorded! [only 1 button appears now. It says "Finish". This returns to main menu, recording results from the baseling as normal.]
+Strength baseline:
     We will begin with a few excercises, to log a baseline for your fitness!
-    We will start with squats! Raise the dumbells at head height, and squat down slowly.
+    We will start with squats! Raise the dumbells to head height, and squat down slowly.
     Try to squat as many times with as much weight as feels comfortable for you. Remember, don't overwork yourself!
     When you are done, input how many squats you did, and how much weight you used! [input fields appear]
-Balance:
+    Next, we will do a few dumbbell presses! Raise the dumbbells above your head, and then lower them to your shoulders.
+    Try to press as many times with as much weight as feels comfortable for you!
+    When you are done, input how many presses you did, and how much weight you used! [input fields appear]
+    Congratulations! Baseline recorded! [only 1 button appears now. It says "Finish". This returns to main menu, recording results from the baseling as normal.]
+Balance baseline:
     We will begin with a few excercises, to log a baseline for your fitness!
     We will start with a one leg stand! Stand in place, and raise one leg behind you. See how straight you can stand!
     Try to continue as long as feels comfortable for you. Remember, be careful not to fall and hurt yourself!
@@ -21,3 +28,24 @@ Balance:
     2
     1
     [timer begins, with button to end timer]
+    Next, we will try leaning against a wall. Stand with one arm against the wall, and raise one leg.
+    Try to continue as long as feels comfortable for you. Remember, be careful not to fall and hurt yourself!
+    Press the button when you are ready to begin, and press again when you are done!
+    3
+    2
+    1
+    [timer begins with button to end timer]
+    Congratulations! Baseline recorded! [only 1 button appears now. It says "Finish". This returns to main menu, recording results from the baseling as normal.]
+
+Aerobics excercises:
+    Marching in place
+    Step touches
+    Walking
+Strength excercises:
+    Squats
+    Dumbbell curl
+    Wall push ups
+Balance excercises:
+    One leg stand
+    Wall stand
+    Walking (slowly, deliberately)
