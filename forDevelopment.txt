@@ -49,3 +49,30 @@ Balance excercises:
     One leg stand
     Wall stand
     Walking (slowly, deliberately)
+
+Reminder:
+    Remember to stay safe! Take regular breaks for water, and don't overwork yourself!
+    If you start feeling faint or dizzy, sit down - don't wait to finish that last rep!
+    If you have arthritis or any other problematic medical conditions, please check with your doctor before using this app!
+
+Splash text:
+    Now with 100% more sweat!
+    Leg day? Leg day.
+    You vs. you (you’re winning)
+    Sore today, strong tomorrow
+    Hydrate or diedrate!
+    Powered by squats
+    Muscles loading… please wait!
+    Warning: May cause confidence!
+    Beast mode: ON
+    No pain, no champagne!
+    Flex appeal activated
+    Running late counts as cardio
+    This splash text did 10 push-ups!
+    Sweat is just your awesome leaking
+    Lift, laugh, love!
+    Your couch misses you already
+    This app believes in you!
+
+About:
+    FitQuest Journey is a fitness resource for seniors. It uses a baseline test to determine a personalized safe and healthy workout.

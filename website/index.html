@@ -3,36 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fitness Journey</title>
+  <title>FitQuest Journey</title>
   <style>
     html, body {margin:0; height:100%; overflow:hidden;}
     body {background:#ffffff; color:#1f2937; font-family:Segoe UI,Arial,sans-serif; font-size:20.8px;}
-    #app {padding:31px; display:flex; flex-direction:column; align-items:center; background:#faf8f5; border-left:2px solid #d6cdb8; border-right:2px solid #d6cdb8; margin:0 72px; height:100vh; box-sizing:border-box; overflow:hidden;}
+    #page-title {text-align:center; padding:18px 0 10px 0; font-size:44px; font-weight:700; color:#1f2937; letter-spacing:1px; margin:0; background:transparent; position:relative; z-index:200; display:flex; justify-content:center; align-items:baseline;}
+    #app {padding:31px; padding-top:0; display:flex; flex-direction:column; align-items:center; background:#faf8f5; border-left:2px solid #d6cdb8; border-right:2px solid #d6cdb8; margin:0 72px; margin-top:-76px; padding-top:76px; height:100vh; box-sizing:border-box; overflow:hidden;}
     .hidden {display:none;}
-    button {padding:13px 18px; margin:5px 5px 10px 5px; border:0; border-radius:10px; color:#1a1a1a; cursor:pointer; font-size:20.8px; font-weight:600;}
+    button {padding:13px 18px; margin:5px 5px 10px 5px; border:2px solid #000; border-radius:10px; color:#1a1a1a; cursor:pointer; font-size:20.8px; font-weight:600;}
     .bt-primary{background:#5b9fff;} .bt-aerobics{background:#ff7f50;} .bt-strength{background:#3dcc6a;} .bt-balance{background:#f5b731;} .bt-continue{background:#3dcc6a;} .bt-back{background:#475569; color:#fff;} .bt-finish{background:#3dcc6a;}
-    #section {background:#fff; border:1px solid #d1d5db; border-radius:14px; padding:23px; max-width:806px; width:100%; box-shadow:0 3px 12px rgba(0,0,0,0.08); margin:0 auto; text-align:center;}
-    #cube {position:fixed; bottom:16px; right:16px; max-width:220px; max-height:180px;}
+    #section {background:#fff; border:1px solid #d1d5db; border-radius:14px; padding:23px; max-width:720px; width:100%; box-shadow:0 3px 12px rgba(0,0,0,0.08); margin:0 auto; text-align:center;}
+    #cube {position:fixed; bottom:36px; right:16px; max-width:220px; max-height:180px;}
+    #credit-text {position:fixed; bottom:12px; right:16px; font-size:12px; color:#6b7280; text-align:right; z-index:10;}
     #timer {margin-top:16px; color:#111; font-weight:700; font-size:20.8px;}
-    #main-screen, #result-screen, #exercise-screen {text-align:center; width:100%;}
+    #main-screen, #result-screen, #exercise-screen {text-align:center; width:100%; margin-top:55px;}
+    #left-panels {position:fixed; left:25%; top:calc(76px + (100vh - 76px) * 0.5); transform:translate(-50%, -50%); max-width:340px; z-index:100; display:flex; flex-direction:column; align-items:stretch; gap:14px;}
+    #about-block {text-align:center; padding:0; background:#fff; border:1px solid #d1d5db; border-radius:14px; box-shadow:0 3px 12px rgba(0,0,0,0.08); font-size:20.8px; line-height:1.6; color:#1f2937; overflow:hidden;}
+    #about-header {cursor:pointer; padding:16px 23px; font-weight:700; font-size:20px; color:#1f2937; margin:0; user-select:none; display:flex; justify-content:space-between; align-items:center;}
+    #about-header:hover {background:#f0f0f0;}
+    #about-header .arrow {transition:transform 0.25s; font-size:16px; color:#6b7280;}
+    #about-header .arrow.open {transform:rotate(90deg);}
+    #about-content {padding:0 23px 18px 23px; display:none; text-align:center;}
+    #about-content.open {display:block;}
+    #reminder-block {text-align:center; padding:23px; background:#fff; border:1px solid #d1d5db; border-radius:14px; box-shadow:0 3px 12px rgba(0,0,0,0.08); font-size:20.8px; line-height:1.6; color:#1f2937; overflow:visible;}
+    #splash-wrap {position:relative; top:20px; left:-4px; width:0; display:flex; flex-direction:column; align-items:center; transform:rotate(-20deg) translateX(-50%); z-index:210; overflow:visible;}
+    #splash-text {font-size:24px; font-weight:700; color:#b91c1c; font-style:italic; white-space:nowrap; pointer-events:none; animation:splash-pulse 2.5s ease-in-out infinite;}
+    @keyframes splash-pulse {0%{transform:scale(1);}50%{transform:scale(1.18);}100%{transform:scale(1);}}
+    #reminder-block h3 {margin-top:0; color:#1f2937; font-size:20px;}
+    #reminder-block p {margin:10px 0;}
     #goal-list-section h3 {text-align:center;}
     #goal-list {margin:0; padding:0; text-align:center; list-style:none;}
     #goal-list li {display:block; margin:5px auto; position:relative;}
-    .goal-tooltip {display:none; position:absolute; left:50%; transform:translateX(-50%); top:100%; margin-top:6px; background:#fff; border:1px solid #cbd5e1; border-radius:10px; padding:12px 18px; box-shadow:0 4px 16px rgba(0,0,0,0.13); z-index:50; white-space:nowrap; font-size:17px; font-weight:400; color:#1f2937; pointer-events:none;}
-    #goal-list li:hover .goal-tooltip, .goal-tooltip.pinned {display:block;}
-    .goal-tooltip.pinned {pointer-events:auto;}
+    .goal-exercises {margin:2px 0 10px 0; padding:0; list-style:none; font-size:16px; color:#475569;}
+    .goal-exercises li {display:block; margin:1px 0; font-weight:400;}
+    .goal-exercises-header {font-size:17px; color:#1f2937; margin-bottom:4px !important;}
+    .goal-tooltip {display:none; position:absolute; left:50%; transform:translateX(-50%); top:100%; margin-top:6px; background:#fff; border:1px solid #cbd5e1; border-radius:10px; padding:12px 18px; box-shadow:0 4px 16px rgba(0,0,0,0.13); z-index:50; white-space:nowrap; font-size:17px; font-weight:400; color:#1f2937;}
+    .goal-tooltip.pinned {display:block;}
     #input-fields, #input-fields-press {text-align:center;}
     input[type="number"]{margin:0 5px; padding:8px 10px; border:1px solid #cbd5e1; border-radius:8px; display:inline-block; width:156px; font-size:20.8px;}
-    .checkbox-group {margin:16px 0; text-align:center;}
-    .checkbox-group label {display:block; margin:8px auto; padding:10px 21px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer; max-width:364px; font-size:19.5px; transition: background 0.15s, border-color 0.15s;}
+    .checkbox-group {margin:16px 0; text-align:center; display:flex; flex-wrap:wrap; justify-content:center; gap:8px;}
+    .checkbox-group label {display:inline-flex; align-items:center; margin:0; padding:10px 16px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer; font-size:19.5px; transition: background 0.15s, border-color 0.15s; white-space:nowrap;}
     .checkbox-group label:hover {background:#e0e7ff; border-color:#6366f1;}
     .checkbox-group input[type="radio"] {margin-right:10px; accent-color:#0050d0;}
     .checkbox-group label.selected {background:#dbeafe; border-color:#0050d0; font-weight:600;}
-    #sign-in-area {position:fixed; right:25%; top:65%; transform:translate(50%, -50%); display:flex; flex-direction:column; align-items:center; z-index:100;}
+    #sign-in-area {position:fixed; right:25%; top:calc(76px + (100vh - 76px) * 0.65); transform:translate(50%, -50%); display:flex; flex-direction:column; align-items:center; z-index:100;}
     #s4-logo {max-width:246px; margin-bottom:8px;}
     #s4-link {color:#0050d0; font-size:28.7px; font-weight:600; text-decoration:none; margin-bottom:10px;}
     #s4-link:hover {text-decoration:underline;}
-    #sign-in-btn {padding:16px 26px; border:0; border-radius:13px; background:#5b9fff; color:#1a1a1a; font-size:20.8px; font-weight:600; cursor:pointer; transition: background 0.4s;}
+    #sign-in-btn {padding:16px 26px; border:2px solid #000; border-radius:13px; background:#5b9fff; color:#1a1a1a; font-size:20.8px; font-weight:600; cursor:pointer; transition: background 0.4s;}
     #sign-in-btn.signed-in {background:#3dcc6a; cursor:default;}
     #sign-in-btn.loading {opacity:0.7; cursor:wait;}
     @keyframes signin-pulse {0%{opacity:0.7}50%{opacity:0.4}100%{opacity:0.7}}
@@ -40,11 +58,34 @@
   </style>
 </head>
 <body>
+  <h1 id="page-title"><span style="color:#b91c1c">Fit</span><span style="color:#2956a8">Quest</span><span>&nbsp;Journey</span>
+    <div id="splash-wrap">
+      <span id="splash-text"></span>
+    </div>
+  </h1>
   <img id="cube" src="test_cube.png" alt="test_cube" onerror="this.style.display='none'" />
+  <p id="credit-text">Created by Ari Ott</p>
   <div id="sign-in-area">
     <a href="http://www.supersimplestorageservice.com/" target="_blank" rel="noopener"><img id="s4-logo" src="S4 Logo.png" alt="S4 Logo" onerror="this.style.display='none'" style="cursor:pointer;" /></a>
     <a id="s4-link" href="http://www.supersimplestorageservice.com/" target="_blank" rel="noopener">powered by S4</a>
     <button id="sign-in-btn">Sign in?</button>
+  </div>
+  <div id="left-panels">
+    <div id="about-block">
+      <div id="about-header" onclick="toggleAbout()">
+        <span>About</span>
+        <span class="arrow" id="about-arrow">▶</span>
+      </div>
+      <div id="about-content">
+        <p>FitQuest Journey is a fitness resource for seniors. It uses a baseline test to determine a personalized safe and healthy workout.</p>
+      </div>
+    </div>
+    <div id="reminder-block">
+      <h3>!  Reminder  !</h3>
+      <p>Remember to stay safe! Take regular breaks for water, and don't overwork yourself!</p>
+      <p>If you start feeling faint or dizzy, sit down - don't wait to finish that last rep!</p>
+      <p>If you have arthritis or any other problematic medical conditions, please check with your doctor before using this app!</p>
+    </div>
   </div>
   <div id="app">
     <div id="main-screen">
@@ -92,6 +133,15 @@
   </div>
 
   <script>
+    function toggleAbout() {
+      const content = document.getElementById('about-content');
+      const arrow = document.getElementById('about-arrow');
+      content.classList.toggle('open');
+      arrow.classList.toggle('open');
+      // Recalculate panel position after expanding/collapsing
+      if (typeof adjustReminderPosition === 'function') adjustReminderPosition();
+    }
+
     const rawPlan = {
       Aerobics: [
         'We will begin with a few excercises, to log a baseline for your fitness!',
@@ -135,6 +185,120 @@
       '1+ hours',
       "I can't take a long walk"
     ];
+
+    // Default exercise targets (before baseline is recorded), all rounded to nearest 5
+    const defaultGoalExercises = {
+      Aerobics: ['Marching in place — 5 minutes', 'Step touches — 5 minutes', 'Walking — 10 minutes'],
+      Strength: ['Squats — 10 reps', 'Dumbbell curl — 10 reps', 'Wall push ups — 10 reps'],
+      Balance: ['One leg stand — 15 seconds per leg', 'Wall stand — 20 seconds per leg', 'Walking (slowly, deliberately) — 5 minutes']
+    };
+
+    // Round a number to the nearest 5 (e.g. 21 -> 20, 13 -> 15)
+    function roundTo5(n) {
+      return Math.round(n / 5) * 5;
+    }
+
+    // Compute scaled exercise targets based on baseline results.
+    // Uses gentle scaling — slightly above baseline to encourage progress
+    // without overworking a senior (~70 years old).
+    // All reps, weights, and times are rounded to the nearest 5.
+    function getScaledExercises(goal) {
+      const result = goalResults[goal];
+      if (!result) return defaultGoalExercises[goal];
+
+      if (goal === 'Aerobics') {
+        // Scale marching: aim for ~1.2x baseline, min 1 min, max 10 min
+        const marchSec = result.marchTime.seconds || 0;
+        let marchTargetSec = roundTo5(Math.round(marchSec * 1.2));
+        marchTargetSec = Math.max(60, Math.min(marchTargetSec, 600));
+        const marchMin = roundTo5(Math.round(marchTargetSec / 60)) || 5;
+        const marchLabel = marchMin + (marchMin === 1 ? ' minute' : ' minutes');
+
+        // Step touches: scale gently off marching baseline (~80% of march target)
+        let stepTargetSec = roundTo5(Math.round(marchTargetSec * 0.8));
+        stepTargetSec = Math.max(60, Math.min(stepTargetSec, 300));
+        const stepMin = roundTo5(Math.round(stepTargetSec / 60)) || 5;
+        const stepLabel = stepMin + (stepMin === 1 ? ' minute' : ' minutes');
+
+        // Walking: scale from their reported walk preference
+        const walkMap = { '10 minutes': 10, '20 minutes': 15, '30 minutes': 20, '45 minutes': 25, '1+ hours': 30, "I can't take a long walk": 5 };
+        const walkMin = roundTo5(walkMap[result.walkDuration] || 10);
+        const walkLabel = walkMin + ' minutes';
+
+        return [
+          'Marching in place — ' + marchLabel,
+          'Step touches — ' + stepLabel,
+          'Walking — ' + walkLabel
+        ];
+      }
+
+      if (goal === 'Strength') {
+        const sqReps = parseInt(result.squatReps) || 0;
+        const sqWeight = parseInt(result.squatWeight) || 0;
+        const prReps = parseInt(result.pressReps) || 0;
+        const prWeight = parseInt(result.pressWeight) || 0;
+
+        // Squats: aim for baseline reps + a few more, rounded to nearest 5, cap at 20
+        // Keep weight at baseline — don't increase weight, only reps
+        let squatTarget = roundTo5(Math.min(20, Math.max(5, sqReps + Math.max(2, Math.round(sqReps * 0.2)))));
+        let squatWeightRounded = roundTo5(sqWeight);
+        let squatWeightLabel = squatWeightRounded > 0 ? ' @ ' + squatWeightRounded + ' lbs' : '';
+
+        // Dumbbell curls: scale reps from press baseline (upper body), rounded to nearest 5
+        let curlTarget = roundTo5(Math.min(15, Math.max(5, prReps + Math.max(2, Math.round(prReps * 0.2)))));
+        // Curl weight based on press weight (same muscle group), keep at or slightly below baseline
+        let curlWeight = prWeight > 0 ? roundTo5(Math.max(5, Math.round(prWeight * 0.9))) : 0;
+        let curlWeightLabel = curlWeight > 0 ? ' @ ' + curlWeight + ' lbs' : '';
+
+        // Wall push ups: scale from press baseline, rounded to nearest 5
+        let pushupTarget = roundTo5(Math.min(15, Math.max(5, prReps + Math.max(2, Math.round(prReps * 0.25)))));
+
+        return [
+          'Squats — ' + squatTarget + ' reps' + squatWeightLabel,
+          'Dumbbell curl — ' + curlTarget + ' reps' + curlWeightLabel,
+          'Wall push ups — ' + pushupTarget + ' reps'
+        ];
+      }
+
+      if (goal === 'Balance') {
+        const oneLegSec = result.oneLegTime.seconds || 0;
+        const wallSec = result.wallLeanTime.seconds || 0;
+
+        // One leg stand: aim for ~1.25x baseline, rounded to 5s, min 10s, max 60s
+        let oneLegTarget = roundTo5(Math.round(oneLegSec * 1.25));
+        oneLegTarget = Math.max(10, Math.min(oneLegTarget, 60));
+        const oneLegLabel = oneLegTarget + ' seconds per leg';
+
+        // Wall stand: aim for ~1.25x baseline, rounded to 5s, min 10s, max 60s
+        let wallTarget = roundTo5(Math.round(wallSec * 1.25));
+        wallTarget = Math.max(10, Math.min(wallTarget, 60));
+        const wallLabel = wallTarget + ' seconds per leg';
+
+        // Walking: scale gently based on average balance time, rounded to nearest 5
+        const avgBalance = (oneLegSec + wallSec) / 2;
+        let walkMin;
+        if (avgBalance < 10) walkMin = 5;
+        else if (avgBalance < 20) walkMin = 5;
+        else if (avgBalance < 40) walkMin = 5;
+        else walkMin = 10;
+        const walkLabel = walkMin + ' minutes';
+
+        return [
+          'One leg stand — ' + oneLegLabel,
+          'Wall stand — ' + wallLabel,
+          'Walking (slowly, deliberately) — ' + walkLabel
+        ];
+      }
+
+      return defaultGoalExercises[goal];
+    }
+
+    // Wrapper for compatibility — always returns current scaled exercises
+    const goalExercises = new Proxy({}, {
+      get(_, goal) {
+        return getScaledExercises(goal);
+      }
+    });
 
     const addGoalBtn = document.getElementById('add-goal');
     const goalOptions = document.getElementById('goal-options');
@@ -225,10 +389,20 @@
     function unlockGoal(goal) {
       const existing = Array.from(goalList.querySelectorAll('button')).find(b => b.textContent === goal);
       if (existing) {
-        // Update tooltip text for existing goal
+        // Update tooltip text and exercise list for existing goal
         const li = existing.closest('li');
         const tip = li.querySelector('.goal-tooltip');
         if (tip) tip.textContent = getResultText(goal);
+        // Refresh exercise list with scaled targets
+        const exercisesList = li.querySelector('.goal-exercises');
+        if (exercisesList) {
+          exercisesList.innerHTML = '<li class="goal-exercises-header"><strong>Suggested Workout:</strong></li>';
+          (goalExercises[goal] || []).forEach(ex => {
+            const exLi = document.createElement('li');
+            exLi.textContent = '• ' + ex;
+            exercisesList.appendChild(exLi);
+          });
+        }
         return;
       }
       const li = document.createElement('li');
@@ -237,6 +411,19 @@
       goalBtn.textContent = goal;
       const goalColorMap = { Aerobics: 'bt-aerobics', Strength: 'bt-strength', Balance: 'bt-balance' };
       goalBtn.className = goalColorMap[goal] || 'bt-primary';
+
+      // Add exercises list beneath the goal button
+      const exercisesList = document.createElement('ul');
+      exercisesList.className = 'goal-exercises';
+      const headerLi = document.createElement('li');
+      headerLi.className = 'goal-exercises-header';
+      headerLi.innerHTML = '<strong>Suggested Workout:</strong>';
+      exercisesList.appendChild(headerLi);
+      (goalExercises[goal] || []).forEach(ex => {
+        const exLi = document.createElement('li');
+        exLi.textContent = '• ' + ex;
+        exercisesList.appendChild(exLi);
+      });
 
       const tooltip = document.createElement('div');
       tooltip.className = 'goal-tooltip';
@@ -253,12 +440,8 @@
         tooltip.classList.toggle('pinned');
       });
 
-      // Update tooltip text on hover
-      li.addEventListener('mouseenter', () => {
-        tooltip.textContent = getResultText(goal);
-      });
-
       li.appendChild(goalBtn);
+      li.appendChild(exercisesList);
       li.appendChild(tooltip);
       goalList.appendChild(li);
     }
@@ -511,6 +694,96 @@
         signInBtn.textContent = 'Signed in!';
       }, delay);
     });
+
+    // --- Splash text logic ---
+    const splashTexts = [
+      'Now with 100% more sweat!',
+      'Leg day? Leg day.',
+      'You vs. you (you\'re winning)',
+      'Sore today, strong tomorrow',
+      'Hydrate or diedrate!',
+      'Powered by squats',
+      'Muscles loading… please wait!',
+      'Warning: May cause confidence!',
+      'Beast mode: ON',
+      'No pain, no champagne!',
+      'Flex appeal activated',
+      'Running late counts as cardio',
+      'This splash text did 10 push-ups!',
+      'Sweat is just your awesome leaking',
+      'Lift, laugh, love!',
+      'Your couch misses you already',
+      'This app believes in you!'
+    ];
+
+    // Seeded random based on the current date (changes once per day)
+    function getDaySeed() {
+      const now = new Date();
+      return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+    }
+
+    function seededRandom(seed) {
+      // Simple hash-based pseudo-random from seed
+      let x = Math.sin(seed) * 10000;
+      return x - Math.floor(x);
+    }
+
+    function setSplashForDay() {
+      const seed = getDaySeed();
+      const index = Math.floor(seededRandom(seed) * splashTexts.length);
+      document.getElementById('splash-text').textContent = splashTexts[index];
+    }
+
+    // Set initial splash text based on today's date
+    setSplashForDay();
+
+    // --- Overlap avoidance for left panels (about + reminder) ---
+    const leftPanels = document.getElementById('left-panels');
+    const defaultPanelsTop = 'calc(76px + (100vh - 76px) * 0.5)';
+    let adjustTimer = null;
+
+    function adjustReminderPosition() {
+      // Debounce to avoid rapid repeated calls
+      clearTimeout(adjustTimer);
+      adjustTimer = setTimeout(() => {
+        leftPanels.style.top = defaultPanelsTop;
+
+        // Force layout recalc
+        void leftPanels.offsetHeight;
+
+        const panelsRect = leftPanels.getBoundingClientRect();
+
+        // Find all visible section/text boxes in the app area that could overlap
+        const appSections = document.querySelectorAll('#app #section, #exercise-screen:not(.hidden) #section, #result-screen:not(.hidden) #section');
+        let maxOverlap = 0;
+
+        appSections.forEach(section => {
+          const sectionRect = section.getBoundingClientRect();
+          // Check horizontal overlap
+          const horizOverlap = panelsRect.right > sectionRect.left && panelsRect.left < sectionRect.right;
+          if (horizOverlap) {
+            // Check vertical overlap
+            const vertOverlap = panelsRect.top < sectionRect.bottom && panelsRect.bottom > sectionRect.top;
+            if (vertOverlap) {
+              const overlap = sectionRect.bottom - panelsRect.top + 16;
+              if (overlap > maxOverlap) maxOverlap = overlap;
+            }
+          }
+        });
+
+        if (maxOverlap > 0) {
+          leftPanels.style.top = 'calc(' + defaultPanelsTop + ' + ' + maxOverlap + 'px)';
+        }
+      }, 50);
+    }
+
+    // Also adjust on window resize
+    window.addEventListener('resize', adjustReminderPosition);
+
+    // Use MutationObserver to detect UI changes and adjust reminder position
+    const appEl = document.getElementById('app');
+    const observer = new MutationObserver(adjustReminderPosition);
+    observer.observe(appEl, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 
     showMain();
   </script>

@@ -4,17 +4,18 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 
-// Ensure web root is set to project folder so we don't rely on wwwroot.
+// Serve static files from the "website" subdirectory.
 var root = Directory.GetCurrentDirectory();
+var webRoot = Path.Combine(root, "website");
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     ContentRootPath = root,
-    WebRootPath = root
+    WebRootPath = webRoot
 });
 
 var app = builder.Build();
 
-var rootProvider = new PhysicalFileProvider(root);
+var rootProvider = new PhysicalFileProvider(webRoot);
 app.UseDefaultFiles(new DefaultFilesOptions
 {
     FileProvider = rootProvider,
